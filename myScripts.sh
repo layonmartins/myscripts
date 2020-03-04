@@ -32,30 +32,49 @@ mygrepusage() {
     echo "      - The grep is sorted, there are no repeated lines and date/hour is colorful"
     echo
     echo "      - Example usages: "
-    echo "              ex1: '~$ mygrep notification_enqueue' will return all logs with 'notification_enqueue' matchs"
-    echo "              ex2: '~$ mygrep notification_enqueue|notification_canceled' will return all logs with 'notification_enqueue' or 'notification_canceled' matchs"
-    echo "              ex3: '~$ mygrep notification_enqueue.*com.android.systemui' will return all logs with 'notification_enqueue' and 'com.android.systemui' matchs"
+    echo "              e.g1: '~$ mygrep notification_enqueue' will return all logs with 'notification_enqueue' matchs"
+    echo "              e.g2: '~$ mygrep notification_enqueue|notification_canceled' will return all logs with 'notification_enqueue' or 'notification_canceled' matchs"
+    echo "              e.g3: '~$ mygrep notification_enqueue.*com.android.systemui' will return all logs with 'notification_enqueue' and 'com.android.systemui' matchs"
     echo
-    echo "-appsenq: "
-    echo "      - Will return all apps that have posted any notifications and frenquence of the posting"
-    echo "              ex: '~$ mygrep -appsenq"
+    echo "-appsenq: | --appsenqueue "
+    echo "      - Will return all apps that have posted any 'x' notifications and frenquence of the posting"
+    echo "              e.g: '~$ mygrep -appsenq"
+    echo
+    echo "-notilist: | --notificationlist "
+    echo "      - Will print the bugreport.txt 'notification list:' - that is a notificationRecord info of all notifications in statusbar"
+    echo "              e.g: mygrep -notilist"
 
 }
 
 ###############################################################################
-# mygrep options funcionts: #
+# mygrep options functions: #
 appsenq() {
     echo
     echo "################# mygrep -appsenq option result: ###################"
-    echo "These are the packages that have posted any notifications: "
+    echo "These are the packages that have posted any 'X' notifications: "
     echo
     echo "Packages List:"
     grep -F -h "notification_enqueue: [" *events.txt | cut -d, -f3 | sort | uniq -c
     echo
 }
 
-# com.motorola.gesture
-# com.motorola.survey
+
+notilist() {
+    echo
+    echo "################# mygrep -notilist option result: ###################"
+    echo "These are the 'notification list:' of DUMP OF SERVICE CRITICAL notification: "
+    echo
+    echo "Notification List:"
+
+    # get the head and tail line number OF DUMP OF SERVICE CRITICAL notification logs 
+    local start=$(grep -n "DUMP OF SERVICE CRITICAL notification" bugreport.txt | grep -Eo '^[^:]+');
+    local end=$(grep -n -m 1 "was the duration of dumpsys notification" bugreport.txt | grep -Eo '^[^:]+');
+
+    sed -n "${start},${end}p" bugreport.txt;
+
+    echo
+}
+
 
 ################################################################################
 #Function mygrep to use my formatation "[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9]”
@@ -76,7 +95,10 @@ mygrep(){
     -help | --help | -h | --h | -H ) mygrepusage ;;
 
     # print all apps that have posted any notifications
-    -appsenq ) appsenq ;;
+    -appsenq | --appsenqueue) appsenq ;;
+
+    # print the bugreport.txt 'notification list:' - that is a notificationRecord info of all notifications in statusbar
+    -notilist | --notificationlist) notilist ;;
     
     # default option
     *)

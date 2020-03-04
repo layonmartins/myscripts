@@ -24,7 +24,9 @@ This function return all occurrences of the match parameter $1 sorted, unique an
 
 #### Options:
 
-     -appsenq : print all apps that have posted any notifications
+     -appsenq: | --appsenqueue : will print all apps that have posted any notifications
 
-     -help : for instructions usage
+     -notilist: | --notificationlist : will print the bugreport.txt 'notification list:' - that is a notificationRecord info of all notifications in statusbar
+
+     -h | --help : for instructions usage
 
