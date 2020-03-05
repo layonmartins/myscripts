@@ -28,5 +28,7 @@ This function return all occurrences of the match parameter $1 sorted, unique an
 
      -notilist: | --notificationlist : will print the bugreport.txt 'notification list:' - that is a notificationRecord info of all notifications in statusbar
 
+     -channels | --notificationchannels : will print the bugreport.txt 'notification channels of all apk:' - AppSettings"
+
      -h | --help : for instructions usage
 

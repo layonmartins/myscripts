@@ -43,6 +43,10 @@ mygrepusage() {
     echo "-notilist: | --notificationlist "
     echo "      - Will print the bugreport.txt 'notification list:' - that is a notificationRecord info of all notifications in statusbar"
     echo "              e.g: mygrep -notilist"
+    echo
+    echo "-channels | --notificationchannels "
+    echo "      - Will print the bugreport.txt 'notification channels of all apk:' - AppSettings"
+    echo "              e.g: mygrep -channels"
 
 }
 
@@ -60,6 +64,9 @@ appsenq() {
 
 
 notilist() {
+    
+    # TODO pass a parameter and return specifif notificationRecord info from the package or channel
+
     echo
     echo "################# mygrep -notilist option result: ###################"
     echo "These are the 'notification list:' of DUMP OF SERVICE CRITICAL notification: "
@@ -75,6 +82,25 @@ notilist() {
     echo
 }
 
+channels() {
+
+    # TODO pass a parameter and return specifif channels from the package or channelname
+
+    echo
+    echo "################# mygrep -channels option result: ###################"
+    echo "These are all notification channels - DUMP OF SERVICE notification: "
+    echo
+    echo "Notification List:"
+
+    # get the head and tail line number OF DUMP OF SERVICE CRITICAL notification logs 
+    local start=$(grep -n "Notification Preferences:" bugreport.txt | grep -Eo '^[^:]+');
+    local end=$(grep -n "Restored without uid:" bugreport.txt | grep -Eo '^[^:]+');
+    end=$((end-1))
+
+    sed -n "${start},${end}p" bugreport.txt;
+
+    echo
+}
 
 ################################################################################
 #Function mygrep to use my formatation "[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9]”
@@ -95,10 +121,13 @@ mygrep(){
     -help | --help | -h | --h | -H ) mygrepusage ;;
 
     # print all apps that have posted any notifications
-    -appsenq | --appsenqueue) appsenq ;;
+    -appsenq | --appsenqueue ) appsenq ;;
 
     # print the bugreport.txt 'notification list:' - that is a notificationRecord info of all notifications in statusbar
-    -notilist | --notificationlist) notilist ;;
+    -notilist | --notificationlist ) notilist ;;
+
+    # print the bugreport.txt 'notification channels of all apk:' - AppSettings
+    -channels | --notificationchannels ) channels ;;
     
     # default option
     *)
