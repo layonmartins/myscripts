@@ -47,6 +47,10 @@ mygrepusage() {
     echo "-channels | --notificationchannels "
     echo "      - Will print the bugreport.txt 'notification channels of all apk:' - AppSettings"
     echo "              e.g: mygrep -channels"
+    echo
+    echo "-activenoti | --activenotifications "
+    echo "      - Will print the bugreport.txt 'active/inactive notification list:' - AppSettings"
+    echo "              e.g: mygrep -activenoti"
 
 }
 
@@ -102,6 +106,30 @@ channels() {
     echo
 }
 
+activenoti() {
+    
+    # TODO pass a parameter and return specifif notification
+
+    echo
+    echo "################# mygrep -activenoti option result: ###################"
+    echo "These are the 'active notifications: X' of DUMP OF SERVICE notification: "
+    echo
+    
+    #doesn't needed
+    # get the numbers of active notification
+    #active=$(grep -h " active notifications:" bugreport.txt | cut -d: -f2);
+    # get the numbers of inactive notification
+    #inactive=$(grep -h "inactive notifications:" bugreport.txt | cut -d: -f2);
+    #echo "active notifications: ${active}"
+
+    # get the start and end line
+    local start=$(grep -n -m 1 " active notifications:" bugreport.txt | grep -Eo '^[^:]+');
+    local end=$(grep -n -m 1 "HeadsUpManagerPhone state:" bugreport.txt | grep -Eo '^[^:]+');
+    end=$((end-1))
+    sed -n "${start},${end}p" bugreport.txt;
+    echo
+}
+
 ################################################################################
 #Function mygrep to use my formatation "[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9]”
 #this regular expression "[0-9][0-9].." will colorful the time and other $1's of the logs.
@@ -128,6 +156,9 @@ mygrep(){
 
     # print the bugreport.txt 'notification channels of all apk:' - AppSettings
     -channels | --notificationchannels ) channels ;;
+
+    # print the active/inactive notifications
+    -activenoti | --activenotifications ) activenoti ;;
     
     # default option
     *)

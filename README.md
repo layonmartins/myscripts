@@ -30,5 +30,7 @@ This function return all occurrences of the match parameter $1 sorted, unique an
 
      -channels | --notificationchannels : will print the bugreport.txt 'notification channels of all apk:' - AppSettings"
 
+     -activenoti | --activenotifications : will print the bugreport.txt 'active/inactive notification list:' - AppSettings"
+
      -h | --help : for instructions usage
 
